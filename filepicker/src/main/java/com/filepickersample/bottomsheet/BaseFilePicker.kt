@@ -50,7 +50,7 @@ open class BaseFilePicker : BottomSheetDialogFragment(), OnShowListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, themeId ?: R.style.MediaBaseBottomSheetDialog)
+        setStyle(STYLE_NORMAL, themeId ?: R.style.PickerBottomSheetDialog)
         val dialog = dialog ?: return
     }
 

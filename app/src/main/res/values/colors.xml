@@ -14,7 +14,7 @@
     <color name="ucrop_color_active_controls_color">@color/colorAccent</color>
     <color name="ucrop_color_active_aspect_ratio">@color/colorAccent</color>
 
-<!--    <color name="picker_color_bg">@color/white</color>-->
+    <color name="picker_color_bg">@android:color/transparent</color>
 <!--    <color name="picker_button_bg">@color/white</color>-->
 <!--    <color name="picker_text_color">@color/colorPrimary</color>-->
 <!--    <color name="picker_cancel_button_bg">@color/colorPrimary</color>-->

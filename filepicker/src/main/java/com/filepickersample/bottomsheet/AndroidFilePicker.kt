@@ -18,9 +18,11 @@ import android.view.View.*
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import com.filepickersample.R
 import com.filepickersample.databinding.BottomSheetFilePickerLayoutBinding
@@ -56,6 +58,9 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
 
     private val activityLauncher = CustomActivityResult.registerActivityForResult(this)
     private lateinit var binding: BottomSheetFilePickerLayoutBinding
+
+    @LayoutRes
+    private var customLayoutRes: Int? = null
 
     private var callback: FilePickerCallback? = null
 
@@ -94,13 +99,17 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = BottomSheetFilePickerLayoutBinding.inflate(inflater, container, false)
+        binding =
+            if (customLayoutRes != null)
+                BottomSheetFilePickerLayoutBinding.bind(inflater.inflate(customLayoutRes!!, null))
+            else
+                BottomSheetFilePickerLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateUiTheme()
+        if (customLayoutRes == null) updateUiTheme()
         mapping()
         if (directAction) selectFile()
     }
@@ -108,15 +117,15 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
     private fun updateUiTheme() {
         if (actionButtonBg != null) {
             with(binding) {
-                btnTakePhoto.setBackgroundResource(actionButtonBg!!)
+                btnCaptureImage.setBackgroundResource(actionButtonBg!!)
                 btnChooseImage.setBackgroundResource(actionButtonBg!!)
-                btnTakeVideo.setBackgroundResource(actionButtonBg!!)
+                btnCaptureVideo.setBackgroundResource(actionButtonBg!!)
                 btnChooseVideo.setBackgroundResource(actionButtonBg!!)
             }
         }
         if (actionButtonTextColor != null) {
             with(binding) {
-                btnTakePhoto.setTextColor(
+                btnCaptureImage.setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
                         actionButtonTextColor!!
@@ -128,7 +137,7 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
                         actionButtonTextColor!!
                     )
                 )
-                btnTakeVideo.setTextColor(
+                btnCaptureVideo.setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
                         actionButtonTextColor!!
@@ -157,57 +166,57 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
 
     private fun mapping() {
         with(binding) {
-            btnTakePhoto.setText(R.string.take_a_photo)
+            btnCaptureImage.setText(R.string.take_a_photo)
             btnChooseImage.setText(R.string.choose_image_from_gallery)
-            btnTakeVideo.setText(R.string.take_a_video)
+            btnCaptureVideo.setText(R.string.take_a_video)
             btnChooseVideo.setText(R.string.choose_video_from_gallery)
             btnCancel.setText(R.string.cancel)
         }
 
-        binding.btnTakePhoto.setOnClickListener(this)
+        binding.btnCaptureImage.setOnClickListener(this)
         binding.btnChooseImage.setOnClickListener(this)
-        binding.btnTakeVideo.setOnClickListener(this)
+        binding.btnCaptureVideo.setOnClickListener(this)
         binding.btnChooseVideo.setOnClickListener(this)
         binding.btnCancel.setOnClickListener(this)
 
-        binding.btnTakePhoto.visibility = GONE
+        binding.btnCaptureImage.visibility = GONE
         binding.btnChooseImage.visibility = GONE
-        binding.btnTakeVideo.visibility = GONE
+        binding.btnCaptureVideo.visibility = GONE
         binding.btnChooseVideo.visibility = GONE
 
         when (fileSelectionType) {
             ALL -> {
-                binding.btnTakePhoto.visibility = VISIBLE
+                binding.btnCaptureImage.visibility = VISIBLE
                 binding.btnChooseImage.visibility = VISIBLE
-                binding.btnTakeVideo.visibility = VISIBLE
+                binding.btnCaptureVideo.visibility = VISIBLE
                 binding.btnChooseVideo.visibility = VISIBLE
             }
 
             IMAGE -> {
-                binding.btnTakePhoto.visibility = VISIBLE
+                binding.btnCaptureImage.visibility = VISIBLE
                 binding.btnChooseImage.visibility = VISIBLE
             }
 
             VIDEO -> {
-                binding.btnTakeVideo.visibility = VISIBLE
+                binding.btnCaptureVideo.visibility = VISIBLE
                 binding.btnChooseVideo.visibility = VISIBLE
             }
 
             CAPTURE_IMAGE -> {
-                binding.btnTakePhoto.visibility = VISIBLE
+                binding.btnCaptureImage.visibility = VISIBLE
                 directActionType = CAPTURE_IMAGE
                 directAction = true
             }
 
             CAPTURE_VIDEO -> {
-                binding.btnTakeVideo.visibility = VISIBLE
+                binding.btnCaptureVideo.visibility = VISIBLE
                 directActionType = CAPTURE_VIDEO
                 directAction = true
             }
 
             TAKE_IMAGE_VIDEO -> {
-                binding.btnTakePhoto.visibility = VISIBLE
-                binding.btnTakeVideo.visibility = VISIBLE
+                binding.btnCaptureImage.visibility = VISIBLE
+                binding.btnCaptureVideo.visibility = VISIBLE
             }
 
             PICK_IMAGE -> {
@@ -237,11 +246,11 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
     override fun onClick(view: View) {
         when (view) {
             binding.btnCancel -> hideBottomSheet()
-            binding.btnTakePhoto -> {
+            binding.btnCaptureImage -> {
                 directActionType = CAPTURE_IMAGE
                 selectFile()
             }
-            binding.btnTakeVideo -> {
+            binding.btnCaptureVideo -> {
                 directActionType = CAPTURE_VIDEO
                 selectFile()
             }
@@ -670,8 +679,14 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
             return AndroidFilePicker(applicationId)
         }
 
+        fun with(applicationId: String, @LayoutRes layoutRes: Int): AndroidFilePicker {
+            val filePicker = with(applicationId)
+            filePicker.customLayoutRes = layoutRes
+            return filePicker
+        }
+
         fun with(applicationId: String, fileSelectionType: FileSelectionType): AndroidFilePicker {
-            val filePicker = AndroidFilePicker(applicationId)
+            val filePicker = with(applicationId)
             filePicker.fileSelectionType = fileSelectionType
             return filePicker
         }
