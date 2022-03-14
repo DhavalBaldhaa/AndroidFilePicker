@@ -162,7 +162,7 @@ AndroidFilePicker.with(APPLICATION_ID)
     .start(supportFragmentManager)
 ```
 
-# Methods for enable additional functionality
+## Methods for enable additional functionality
 
 |  Method Name             |         Description           |
 :-------------------------:|:-----------------------------:|
