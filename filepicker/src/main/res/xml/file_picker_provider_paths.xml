@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="external"
+        path="." />
+    <external-files-path
+        name="external_files"
+        path="." />
+    <cache-path
+        name="cache"
+        path="." />
+    <external-cache-path
+        name="external_cache"
+        path="." />
+    <files-path
+        name="files"
+        path="." />
+    <external-cache-path
+        name="external_cache_files"
+        path="." />
+    <external-files-path
+        name="external_files_files"
+        path="." />
+</paths>
+
+    <!--
+     must refer if you want to change file path
+    https://stackoverflow.com/questions/42516126/fileprovider-illegalargumentexception-failed-to-find-configured-root
+    -->

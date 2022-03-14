@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#168DD1</color>
+    <color name="colorPrimaryDark">#D6F8FD</color>
+    <color name="colorAccent">#F99E12</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="green">#4CAF50</color>
+
+
+    <color name="ucrop_color_toolbar">@color/colorPrimary</color>
+    <color name="ucrop_color_statusbar">@color/colorPrimary</color>
+    <color name="ucrop_color_toolbar_widget">@color/white</color>
+    <color name="ucrop_color_widget_active">@color/colorAccent</color>
+    <color name="ucrop_color_active_controls_color">@color/colorAccent</color>
+    <color name="ucrop_color_active_aspect_ratio">@color/colorAccent</color>
+</resources>
