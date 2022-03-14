@@ -28,16 +28,19 @@ import com.filepickersample.enumeration.FileSelectionType
 import com.filepickersample.enumeration.FileSelectionType.*
 import com.filepickersample.enumeration.FileType
 import com.filepickersample.enumeration.FileType.Companion.getRootDirectory
+import com.filepickersample.enumeration.FileType.DOCUMENT
 import com.filepickersample.listener.FilePickerCallback
 import com.filepickersample.model.Media
 import com.filepickersample.model.Thumb.Companion.generateThumb
 import com.filepickersample.utils.FileUtil
 import com.filepickersample.utils.FileUtil.UNDER_SCORE
 import com.filepickersample.utils.FileUtil.getFileFromUri
+import com.filepickersample.utils.FileUtil.getFileFromUriWithOriginal
 import com.filepickersample.utils.FileUtil.imageCompress
 import com.yalantis.ucrop.UCrop
 import id.zelory.compressor.constraint.ResolutionConstraint
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.EasyPermissions.PermissionCallbacks
@@ -80,6 +83,7 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
 
     private var documentType = "*/*"
     private var isMultiSelection = false
+    private var documentWithOriginalName = false
 
     constructor(applicationId: String, @StyleRes themeId: Int) : this(applicationId) {
         this.themeId = themeId
@@ -337,7 +341,7 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
                     cropImage(file)
                 } else {
                     var media: Media? = null
-                    MainScope().launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         try {
                             file = getCompressedImage(file)
                             media = Media.create(generateThumb(mContext, FileType.IMAGE, file))
@@ -345,7 +349,9 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
                             e.printStackTrace()
                             media = null
                         }
-                    }.invokeOnCompletion { sendCallBack(media) }
+                    }.invokeOnCompletion {
+                        sendCallBack(media)
+                    }
                 }
             } else {
                 sendCancelCallBack()
@@ -391,7 +397,7 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
                 } else {
                     var media: Media? = null
                     showProgressBar(true)
-                    MainScope().launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         try {
                             var file = getFileFromUri(mContext, result.data?.data, FileType.IMAGE)
                             if (file != null) {
@@ -472,9 +478,11 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
                 showProgressBar(true)
                 try {
                     if (result.data?.data != null) {
-                        val file = getFileFromUri(mContext, result.data?.data, FileType.DOCUMENT)
+                        val file = if (documentWithOriginalName)
+                            getFileFromUriWithOriginal(mContext, result.data?.data, DOCUMENT)
+                        else getFileFromUri(mContext, result.data?.data, DOCUMENT)
                         if (file != null)
-                            media = Media.create(generateThumb(FileType.DOCUMENT, file))
+                            media = Media.create(generateThumb(DOCUMENT, file))
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -495,15 +503,19 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
 
     private fun sendCallBack(media: Media?) {
         showProgressBar(false)
-        if (media == null) callback?.onError(null)
-        else callback?.onSuccess(media)
+        executeOnMain {
+            if (media == null) callback?.onError(null)
+            else callback?.onSuccess(media)
+        }
         hideBottomSheet()
     }
 
     private fun sendCallBack(mediaList: ArrayList<Media>?) {
         showProgressBar(false)
-        if (mediaList.isNullOrEmpty()) callback?.onError(null)
-        else callback?.onSuccess(mediaList)
+        executeOnMain {
+            if (mediaList.isNullOrEmpty()) callback?.onError(null)
+            else callback?.onSuccess(mediaList)
+        }
         hideBottomSheet()
     }
 
@@ -514,7 +526,7 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
     }
 
     private fun cropImage(file: File) {
-        val cropFile = File(
+        var cropFile = File(
             getRootDirectory(context, FileType.IMAGE)
                     + file.nameWithoutExtension + UNDER_SCORE + "cropped." + file.extension
         )
@@ -530,7 +542,16 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
             activityLauncher.launch(uCrop.getIntent(requireActivity())) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     if (file.exists()) file.delete()
-                    sendCallBack(Media.create(generateThumb(mContext, FileType.IMAGE, cropFile)))
+                    var media: Media? = null
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            cropFile = getCompressedImage(cropFile)
+                            media = Media.create(generateThumb(mContext, FileType.IMAGE, cropFile))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            media = null
+                        }
+                    }.invokeOnCompletion { sendCallBack(media) }
                 } else sendCancelCallBack()
             }
         } catch (ex: ActivityNotFoundException) {
@@ -614,8 +635,13 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
         return this
     }
 
-    fun enableMultiSelection(enable: Boolean): AndroidFilePicker {
-        this.isMultiSelection = enable
+    fun enableMultiSelection(): AndroidFilePicker {
+        this.isMultiSelection = true
+        return this
+    }
+
+    fun enableDocumentWithOriginalName(): AndroidFilePicker {
+        this.documentWithOriginalName = true
         return this
     }
 

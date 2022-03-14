@@ -346,6 +346,20 @@ object FileUtil {
         return null
     }
 
+    fun getFileFromUriWithOriginal(context: Context, uri: Uri?, fileType: FileType): File? {
+        if (uri == null || uri.path == null) return null
+        try {
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+            val filename = getFileName(context, uri)
+            val file = createNewFile(context, filename.orEmpty(), fileType)
+            writeStreamToFile(inputStream, file)
+            return file
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
     fun addContentToFile(context: Context, uri: Uri?, outputFile: File): File? {
         if (uri == null || uri.path == null) return null
         try {
@@ -728,17 +742,4 @@ object FileUtil {
         }
     }
 
-    fun getPdfFileFromUri(context: Context, uri: Uri?, fileType: FileType): File? {
-        if (uri == null || uri.path == null) return null
-        try {
-            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
-            val filename = getFileName(context, uri)
-            val file = createNewFile(context, filename.orEmpty(), fileType)
-            writeStreamToFile(inputStream, file)
-            return file
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }
-        return null
-    }
 }

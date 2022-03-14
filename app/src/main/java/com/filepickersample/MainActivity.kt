@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.filepickersample.BuildConfig.APPLICATION_ID
 import com.filepickersample.bottomsheet.AndroidFilePicker
 import com.filepickersample.databinding.ActivityMainBinding
@@ -60,16 +62,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun openFilePicker() {
         AndroidFilePicker.with(APPLICATION_ID)
             .type(selectionType)
-//            .enableDirectAction(CAPTURE_IMAGE)
+            .enableDirectAction(CAPTURE_IMAGE)
             .enableCrop()
-            .enableMultiSelection(true)
-            .compressQuality(60)
+            .enableMultiSelection()
+            .compressQuality(100)
             .pickDocumentType("application/pdf")
+            .enableDocumentWithOriginalName()
             .updateTheme(
-                R.drawable.button_bg,
-                R.color.colorPrimary,
-                R.drawable.button_bg_primary,
-                R.color.white
+                R.drawable.button_bg, R.color.colorPrimary,
+                R.drawable.button_bg_primary, R.color.white
             )
             .callBack(object : FilePickerCallback {
                 override fun onSuccess(media: Media?) = handleSelectedMedia(media)
