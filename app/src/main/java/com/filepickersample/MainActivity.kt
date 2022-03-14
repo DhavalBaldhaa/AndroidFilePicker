@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun openFilePicker() {
         AndroidFilePicker.with(APPLICATION_ID)
             .type(selectionType)
-            .enableDirectAction(CAPTURE_IMAGE)
+//            .enableDirectAction(CAPTURE_IMAGE)
             .enableCrop()
             .enableMultiSelection()
             .compressQuality(100)

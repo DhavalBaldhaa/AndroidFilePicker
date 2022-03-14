@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
+    <color name="picker_color_bg">#F4F4F4</color>
+    <color name="picker_button_bg">#ffffff</color>
+    <color name="picker_text_color">#000000</color>
+    <color name="picker_cancel_button_bg">#000000</color>
+    <color name="picker_cancel_text_color">#ffffff</color>
+
+
 </resources>

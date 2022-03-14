@@ -5,5 +5,5 @@
         android:topLeftRadius="@dimen/_8sdp"
         android:topRightRadius="@dimen/_8sdp" />
     <padding android:top="@dimen/_8sdp" />
-    <solid android:color="@color/white" />
+    <solid android:color="@color/picker_color_bg" />
 </shape>

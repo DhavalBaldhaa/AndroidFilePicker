@@ -32,20 +32,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5sdp"
-            android:background="@android:color/transparent"
+            android:background="@drawable/picker_button_bg"
             android:gravity="center"
             android:text="@string/take_a_photo"
-            android:textColor="@color/black" />
+            android:textColor="@color/picker_text_color" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnChooseImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5sdp"
-            android:background="@android:color/transparent"
+            android:background="@drawable/picker_button_bg"
             android:gravity="center"
             android:text="@string/choose_image_from_gallery"
-            android:textColor="@color/black"
+            android:textColor="@color/picker_text_color"
             android:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -53,10 +53,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5sdp"
-            android:background="@android:color/transparent"
+            android:background="@drawable/picker_button_bg"
             android:gravity="center"
             android:text="@string/take_a_video"
-            android:textColor="@color/black"
+            android:textColor="@color/picker_text_color"
             android:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -64,18 +64,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5sdp"
-            android:background="@android:color/transparent"
+            android:background="@drawable/picker_button_bg"
             android:gravity="center"
             android:text="@string/choose_video_from_gallery"
-            android:textColor="@color/black" />
+            android:textColor="@color/picker_text_color" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCancel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/picker_cancel_button_bg"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textAllCaps="true" />
+            android:textAllCaps="true"
+            android:textColor="@color/picker_cancel_text_color" />
     </LinearLayout>
 </LinearLayout>

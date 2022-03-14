@@ -6,6 +6,6 @@
     </style>
 
     <style name="MediaBottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/shape_corner</item>
+        <item name="android:background">@drawable/picker_bg</item>
     </style>
 </resources>
