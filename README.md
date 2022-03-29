@@ -1,7 +1,7 @@
 <h1 align="center">AndroidFilePicker</h1>
 <p align="center">
-  <a href="https://jitpack.io/#dhaval-baldha1812/filepicker"> <img src="https://jitpack.io/v/dhaval-baldha1812/filepicker/month.svg" /></a>
-  <a href="https://jitpack.io/#dhaval-baldha1812/filepicker"> <img src="https://jitpack.io/v/dhaval-baldha1812/filepicker.svg" /></a>
+  <a href="https://jitpack.io/#DhavalBaldhaa/AndroidFilePicker"> <img src="https://jitpack.io/v/DhavalBaldhaa/AndroidFilePicker/month.svg" /></a>
+  <a href="https://jitpack.io/#DhavalBaldhaa/AndroidFilePicker"> <img src="https://jitpack.io/v/DhavalBaldhaa/AndroidFilePicker.svg" /></a>
 </p>
 
 AndroidFilePicker is android library which will help you to pick any type of media file in your
@@ -40,7 +40,7 @@ library class instance and use it or also modify ui as your requirement.
 
 ```groovy
 dependencies {
-    implementation 'com.github.DhavalBaldhaa:filepicker:release_version'
+	  implementation 'com.github.DhavalBaldhaa:AndroidFilePicker:Tag'
 }
 ```
 
@@ -180,7 +180,7 @@ AndroidFilePicker.with(APPLICATION_ID)
 |  enableDocumentWithOriginalName()  |  Required when you want to select document file with original file name, Default document will select with unique name     |
 
 ## Contribution
-[![GitHub contributors](https://img.shields.io/github/contributors/dhaval-baldha1812/AndroidFilePicker.svg)](https://github.com/dhaval-baldha1812/AndroidFilePicker/graphs/contributors)
+[![GitHub contributors](https://img.shields.io/github/contributors/DhavalBaldhaa/AndroidFilePicker.svg)](https://github.com/DhavalBaldhaa/AndroidFilePicker/graphs/contributors)
 
 * Bug reports and pull requests are welcome.
 * Make sure you use [square/java-code-styles](https://github.com/square/java-code-styles) to format your code.
