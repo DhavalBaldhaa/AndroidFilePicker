@@ -12,6 +12,7 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -20,6 +21,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StyleRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
@@ -44,6 +46,7 @@ import id.zelory.compressor.constraint.ResolutionConstraint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.EasyPermissions.PermissionCallbacks
 import java.io.File
@@ -298,14 +301,36 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
         ) = Unit
 
         override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-            selectFile()
+//            selectFile()
         }
 
-        override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) =
-            hideBottomSheet()
+        override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+            if (context == null || activity == null) {
+                hideBottomSheet()
+                return
+            }
+            if (EasyPermissions.somePermissionPermanentlyDenied(activity!!, perms)) {
+                AlertDialog.Builder(context!!)
+                    .setMessage(context?.getString(R.string.permission_camera_rationale))
+                    .setCancelable(false)
+                    .setPositiveButton(context?.getString(R.string.ok)) { dialog, which ->
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri: Uri = Uri.fromParts("package", applicationId, null)
+                        intent.data = uri
+                        activityLauncher.launch(intent) { result -> selectFile() }
+                    }
+                    .setNegativeButton(context?.getString(R.string.cancel)) { dialog, which ->
+                        hideBottomSheet()
+                    }
+                    .create()
+                    .show()
+            } else {
+                hideBottomSheet()
+            }
+        }
     }
 
-    //    @AfterPermissionGranted(RQ_FILE_PERMISSION)
+    @AfterPermissionGranted(RQ_FILE_PERMISSION)
     private fun selectFile() {
         if (!requestPermission()) return
 
@@ -404,21 +429,26 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
                     }
                     sendCallBack(imgList)
                 } else {
-                    var media: Media? = null
-                    showProgressBar(true)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        try {
-                            var file = getFileFromUri(mContext, result.data?.data, FileType.IMAGE)
-                            if (file != null) {
-                                file = getCompressedImage(file)
-                                media =
-                                    Media.create(generateThumb(mContext, FileType.IMAGE, file))
+                    if (crop) {
+                        cropImage(getFileFromUri(mContext, result.data?.data, FileType.IMAGE))
+                    } else {
+                        var media: Media? = null
+                        showProgressBar(true)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                var file =
+                                    getFileFromUri(mContext, result.data?.data, FileType.IMAGE)
+                                if (file != null) {
+                                    file = getCompressedImage(file)
+                                    media =
+                                        Media.create(generateThumb(mContext, FileType.IMAGE, file))
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                media = null
                             }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            media = null
-                        }
-                    }.invokeOnCompletion { sendCallBack(media) }
+                        }.invokeOnCompletion { sendCallBack(media) }
+                    }
                 }
             } else {
                 sendCancelCallBack()
@@ -519,6 +549,12 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
         hideBottomSheet()
     }
 
+    private fun sendErrorCallBack() {
+        showProgressBar(false)
+        executeOnMain { callback?.onError(null) }
+        hideBottomSheet()
+    }
+
     private fun sendCallBack(mediaList: ArrayList<Media>?) {
         showProgressBar(false)
         executeOnMain {
@@ -534,7 +570,11 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
         hideBottomSheet()
     }
 
-    private fun cropImage(file: File) {
+    private fun cropImage(file: File?) {
+        if (file == null) {
+            sendErrorCallBack()
+            return
+        }
         var cropFile = File(
             getRootDirectory(context, FileType.IMAGE)
                     + file.nameWithoutExtension + UNDER_SCORE + "cropped." + file.extension

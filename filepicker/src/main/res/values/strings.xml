@@ -6,4 +6,5 @@
     <string name="permission_camera_rationale">Camera and storage permission is required for photos and video.</string>
     <string name="permission_contact_rationale">Contact permission is required for read contact.</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>

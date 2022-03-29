@@ -20,11 +20,11 @@ library class instance and use it or also modify ui as your requirement.
 * Pick Video from Gallery
 * Pick Specific type of document user need to specify pick document type
 
-[comment]: <> (# 🎬Preview)
+[comment]: <> (# Preview)
 
 [comment]: <> (<img src="https://github.com/DhavalBaldhaa/filepicker/blob/master/app/screenshots/img1.png" alt="screenshot" width="200" height="400"> )
 
-# 💻Usage
+# Usage
 
 1. Add the JitPack repository to your project level build file
 
