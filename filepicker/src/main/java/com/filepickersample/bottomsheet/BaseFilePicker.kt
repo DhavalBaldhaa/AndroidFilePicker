@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnShowListener
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -122,6 +123,14 @@ open class BaseFilePicker : BottomSheetDialogFragment(), OnShowListener {
         val displayMetrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
         return displayMetrics.heightPixels
+    }
+
+    protected fun isTablet(): Boolean {
+        val xlarge =
+            resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK == 4
+        val large =
+            resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK == Configuration.SCREENLAYOUT_SIZE_LARGE
+        return xlarge || large
     }
 
     companion object {

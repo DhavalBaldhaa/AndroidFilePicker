@@ -2,6 +2,7 @@ package com.filepickersample.bottomsheet
 
 import android.Manifest.permission.*
 import android.app.Activity
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
@@ -17,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
@@ -41,6 +43,8 @@ import com.filepickersample.utils.FileUtil.UNDER_SCORE
 import com.filepickersample.utils.FileUtil.getFileFromUri
 import com.filepickersample.utils.FileUtil.getFileFromUriWithOriginal
 import com.filepickersample.utils.FileUtil.imageCompress
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yalantis.ucrop.UCrop
 import id.zelory.compressor.constraint.ResolutionConstraint
 import kotlinx.coroutines.CoroutineScope
@@ -705,6 +709,23 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
         this.cancelButtonBg = cancelButtonBg
         this.cancelButtonTextColor = cancelButtonTextColor
         return this
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        if (!isTablet()) return dialog
+
+        dialog.setOnShowListener {
+            val bottomDialog = it as BottomSheetDialog
+            val bottomSheet =
+                (bottomDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?)
+                    ?: return@setOnShowListener
+            val displayMetrics = requireActivity().resources.displayMetrics
+            val height = displayMetrics.heightPixels
+            val maxHeight = (height * 0.90).toInt()
+            BottomSheetBehavior.from(bottomSheet).peekHeight = maxHeight
+        }
+        return dialog
     }
 
     companion object {
