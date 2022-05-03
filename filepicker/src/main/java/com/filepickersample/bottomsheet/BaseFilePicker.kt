@@ -111,6 +111,14 @@ open class BaseFilePicker : BottomSheetDialogFragment(), OnShowListener {
             bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
             bottomSheetBehavior?.addBottomSheetCallback(bottomSheetCallback)
             val layoutParams = bottomSheet.layoutParams
+
+            if (isTablet()) {
+                val displayMetrics = requireActivity().resources.displayMetrics
+                val height = displayMetrics.heightPixels
+                val maxHeight = (height * 0.90).toInt()
+                BottomSheetBehavior.from(bottomSheet).peekHeight = maxHeight
+            }
+
             if (!expanded) return
             bottomSheetBehavior?.peekHeight = Resources.getSystem().displayMetrics.heightPixels
             if (layoutParams != null) layoutParams.height = getWindowHeight()
