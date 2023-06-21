@@ -20,9 +20,8 @@ library class instance and use it or also modify ui as your requirement.
 * Pick Video from Gallery
 * Pick Specific type of document user need to specify pick document type
 
-[comment]: <> (# Preview)
-
-[comment]: <> (<img src="https://github.com/DhavalBaldhaa/filepicker/app/screenshots/img1.JPEG" alt="screenshot" width="200" height="400"> )
+# Preview
+<img src="https://github.com/DhavalBaldhaa/AndroidFilePicker/blob/master/app/screenshots/img1.JPEG" alt="screenshot" width="200" height="400"> 
 
 # Usage
 
