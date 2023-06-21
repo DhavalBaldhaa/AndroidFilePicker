@@ -4,12 +4,12 @@
   <a href="https://jitpack.io/#DhavalBaldhaa/AndroidFilePicker"> <img src="https://jitpack.io/v/DhavalBaldhaa/AndroidFilePicker.svg" /></a>
 </p>
 
-AndroidFilePicker is android library which will help you to pick any type of media file in your
+AndroidFilePicker is an android library that will help you to pick any type of media file in your
 application. No need to manage any kind of extra permission or result method override. Just create
-library class instance and use it or also modify ui as your requirement.
+a library class instance and use it or also modify ui as your requirement.
 
 # Features:
-* Supported from Android 13
+* Supported for Android 13
 * Capture Camera Image
 * Pick Gallery Image Single or Multiple
 * Crop Image (Crop image based on provided aspect ratio or let user choose one)
@@ -25,7 +25,7 @@ library class instance and use it or also modify ui as your requirement.
 
 # Usage
 
-1. Add the JitPack repository to your project level build file
+1. Add the JitPack repository to your project-level build file
 
  ```groovy
     allprojects {
