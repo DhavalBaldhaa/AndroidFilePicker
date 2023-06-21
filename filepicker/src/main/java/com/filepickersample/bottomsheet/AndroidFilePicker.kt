@@ -1,6 +1,7 @@
 package com.filepickersample.bottomsheet
 
 import android.Manifest.permission.*
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
@@ -92,6 +93,7 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
     private var isMultiSelection = false
     private var documentWithOriginalName = false
 
+    @SuppressLint("ResourceType")
     constructor(applicationId: String, @StyleRes themeId: Int) : this(applicationId) {
         this.themeId = themeId
     }
@@ -252,14 +254,17 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
                 directActionType = CAPTURE_IMAGE
                 selectFile()
             }
+
             binding.btnCaptureVideo -> {
                 directActionType = CAPTURE_VIDEO
                 selectFile()
             }
+
             binding.btnChooseImage -> {
                 directActionType = PICK_IMAGE
                 selectFile()
             }
+
             binding.btnChooseVideo -> {
                 directActionType = PICK_VIDEO
                 selectFile()
@@ -708,9 +713,20 @@ open class AndroidFilePicker(private val applicationId: String) : BaseFilePicker
 
     companion object {
         private val permissions =
-            if (VERSION.SDK_INT >= VERSION_CODES.Q)
-                arrayOf(CAMERA, READ_EXTERNAL_STORAGE, ACCESS_MEDIA_LOCATION)
-            else arrayOf(CAMERA, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
+            if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+                arrayOf(
+                    CAMERA,
+                    READ_MEDIA_IMAGES,
+                    READ_MEDIA_VIDEO,
+                    ACCESS_MEDIA_LOCATION
+                )
+            } else if (VERSION.SDK_INT >= VERSION_CODES.Q) {
+                arrayOf(
+                    CAMERA,
+                    READ_EXTERNAL_STORAGE,
+                    ACCESS_MEDIA_LOCATION
+                )
+            } else arrayOf(CAMERA, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
         private const val RQ_FILE_PERMISSION = 1001
 

@@ -9,7 +9,7 @@ application. No need to manage any kind of extra permission or result method ove
 library class instance and use it or also modify ui as your requirement.
 
 # Features:
-
+* Supported from Android 13
 * Capture Camera Image
 * Pick Gallery Image Single or Multiple
 * Crop Image (Crop image based on provided aspect ratio or let user choose one)
@@ -22,7 +22,7 @@ library class instance and use it or also modify ui as your requirement.
 
 [comment]: <> (# Preview)
 
-[comment]: <> (<img src="https://github.com/DhavalBaldhaa/filepicker/blob/master/app/screenshots/img1.png" alt="screenshot" width="200" height="400"> )
+[comment]: <> (<img src="https://github.com/DhavalBaldhaa/filepicker/app/screenshots/img1.JPEG" alt="screenshot" width="200" height="400"> )
 
 # Usage
 
